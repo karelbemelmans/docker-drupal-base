@@ -82,7 +82,7 @@ RUN mkdir sites/all/modules/contrib \
               libraries redis pathauto strongarm token transliteration \
               variable views views_bulk_operations wysiwyg-7.x-2.x-dev \
               xmlsitemap content_menu menu_block menu_position cdn smtp \
-              seckit webform memcache
+              seckit webform memcache-7.x-1.6-rc3
 
 # Multilingual
 RUN drush dl entity_translation i18n i18nviews l10n_update title
