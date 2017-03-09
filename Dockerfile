@@ -31,7 +31,7 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
   && chown -R www-data:www-data sites
 
 # Install drush
-ARG DRUSH_VERSION=8.1.2
+ARG DRUSH_VERSION=8.1.10
 RUN curl -L --silent https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar > /usr/local/bin/drush \
   && chmod +x /usr/local/bin/drush \
   && drush --version
