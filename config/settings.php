@@ -13,12 +13,12 @@ $databases['default']['default'] = array(
 
 ////////////////////////////////////////////////////////////////////////////////
 // Redis configuration
-if (isset($_SERVER['DRUPAL_REDIS_HOST']) && !empty($_SERVER['DRUPAL_REDIS_HOST']) &&
-  isset($_SERVER['DRUPAL_REDIS_PORT']) && !empty($_SERVER['DRUPAL_REDIS_PORT'])) {
+if (isset($_ENV['DRUPAL_REDIS_HOST']) && !empty($_ENV['DRUPAL_REDIS_HOST']) &&
+  isset($_ENV['DRUPAL_REDIS_PORT']) && !empty($_ENV['DRUPAL_REDIS_PORT'])) {
 
   $conf['redis_client_interface'] = 'PhpRedis'; // Can be "Predis".
-  $conf['redis_client_host']      = $_SERVER['DRUPAL_REDIS_HOST'];  // Your Redis instance hostname.
-  $conf['redis_client_port']      = $_SERVER['DRUPAL_REDIS_PORT'];  // Your Redis instance hostname.
+  $conf['redis_client_host']      = $_ENV['DRUPAL_REDIS_HOST'];  // Your Redis instance hostname.
+  $conf['redis_client_port']      = $_ENV['DRUPAL_REDIS_PORT'];  // Your Redis instance hostname.
   $conf['lock_inc']               = 'sites/all/modules/contrib/redis/redis.lock.inc';
   $conf['path_inc']               = 'sites/all/modules/contrib/redis/redis.path.inc';
   $conf['cache_backends'][]       = 'sites/all/modules/contrib/redis/redis.autoload.inc';
@@ -27,8 +27,8 @@ if (isset($_SERVER['DRUPAL_REDIS_HOST']) && !empty($_SERVER['DRUPAL_REDIS_HOST']
 
 ////////////////////////////////////////////////////////////////////////////////
 // memcache configuration
-else if (isset($_SERVER['DRUPAL_MEMCACHE_HOST']) && !empty($_SERVER['DRUPAL_MEMCACHE_HOST']) &&
-  isset($_SERVER['DRUPAL_MEMCACHE_PORT']) && !empty($_SERVER['DRUPAL_MEMCACHE_PORT'])) {
+else if (isset($_ENV['DRUPAL_MEMCACHE_HOST']) && !empty($_ENV['DRUPAL_MEMCACHE_HOST']) &&
+  isset($_ENV['DRUPAL_MEMCACHE_PORT']) && !empty($_ENV['DRUPAL_MEMCACHE_PORT'])) {
 
   $conf['cache_backends'] = array('sites/all/modules/contrib/memcache/memcache.inc');
   $conf['cache_default_class'] = 'MemCacheDrupal';
@@ -39,7 +39,7 @@ else if (isset($_SERVER['DRUPAL_MEMCACHE_HOST']) && !empty($_SERVER['DRUPAL_MEMC
   $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
 
   // Memcache server to connect to, we just one for all caches
-  $conf['memcache_servers'] = array($_SERVER['DRUPAL_MEMCACHE_HOST'] . ':' . $_SERVER['DRUPAL_MEMCACHE_PORT'] => 'default');
+  $conf['memcache_servers'] = array($_ENV['DRUPAL_MEMCACHE_HOST'] . ':' . $_ENV['DRUPAL_MEMCACHE_PORT'] => 'default');
 }
 
 // Enforce SSL if the HTTP_X_FORWARDED_PROTO tell us to.
