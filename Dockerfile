@@ -14,6 +14,7 @@ RUN set -x && apt-get update && apt-get install -y \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-install gd mbstring pdo pdo_mysql pdo_pgsql zip \
   && pecl install redis \
+  && pecl install memcache-3.0.8 \
   && docker-php-ext-enable redis \
   && rm -rf /var/lib/apt/lists/*
 
@@ -66,7 +67,7 @@ RUN mkdir sites/all/modules/contrib \
               libraries redis pathauto strongarm token transliteration \
               variable views views_bulk_operations wysiwyg-7.x-2.x-dev \
               xmlsitemap content_menu menu_block menu_position cdn smtp \
-              seckit webform
+              seckit webform memcache
 
 # Multilingual
 RUN drush dl entity_translation i18n i18nviews l10n_update title

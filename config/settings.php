@@ -25,6 +25,23 @@ if (isset($_SERVER['DRUPAL_REDIS_HOST']) && !empty($_SERVER['DRUPAL_REDIS_HOST']
   $conf['cache_default_class']    = 'Redis_Cache';
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// memcache configuration
+else if (isset($_SERVER['DRUPAL_MEMCACHE_HOST']) && !empty($_SERVER['DRUPAL_MEMCACHE_HOST']) &&
+  isset($_SERVER['DRUPAL_MEMCACHE_PORT']) && !empty($_SERVER['DRUPAL_MEMCACHE_PORT'])) {
+
+  $conf['cache_backends'] = array('sites/all/modules/contrib/memcache/memcache.inc');
+  $conf['cache_default_class'] = 'MemCacheDrupal';
+  $conf['page_cache_without_database'] = TRUE;
+  $conf['page_cache_invoke_hooks'] = FALSE;
+
+  // The 'cache_form' bin must be assigned to non-volatile storage.
+  $conf['cache_class_cache_form'] = 'DrupalDatabaseCache';
+
+  // Memcache server to connect to, we just one for all caches
+  $conf['memcache_servers'] = array($_SERVER['DRUPAL_MEMCACHE_HOST'] . ':' . $_SERVER['DRUPAL_MEMCACHE_PORT'] => 'default');
+}
+
 // Enforce SSL if the HTTP_X_FORWARDED_PROTO tell us to.
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
   $base_url = 'https://'.$_SERVER['SERVER_NAME'];
