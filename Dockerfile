@@ -1,22 +1,37 @@
 # from https://www.drupal.org/requirements/php#drupalversions
 FROM php:7.0-apache
 
-RUN a2enmod rewrite
-
 # install the PHP extensions we need
-RUN set -x && apt-get update && apt-get install -y \
+RUN set -x && DEBIAN_FRONTEND=noninteractive && apt-get update \
+  && apt-get install -y --no-install-recommends \
     libpng12-dev \
     libjpeg-dev \
     libpq-dev \
     mysql-client \
     unzip \
-  && rm -rf /var/lib/apt/lists/* \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
   && docker-php-ext-install gd mbstring pdo pdo_mysql pdo_pgsql zip \
   && pecl install redis \
-  && pecl install memcache-3.0.8 \
   && docker-php-ext-enable redis \
   && rm -rf /var/lib/apt/lists/*
+
+# memcached php7 extension needs some special procedure
+RUN set -x && DEBIAN_FRONTEND=noninteractive && apt-get update \
+  && apt-get install -y --no-install-recommends \
+    git \
+    libmemcached-dev \
+    libmemcached11 \
+    build-essential \
+  && cd /tmp \
+  && git clone --branch php7 https://github.com/php-memcached-dev/php-memcached \
+  && cd php-memcached && phpize && ./configure && make && make install \
+  && docker-php-ext-enable memcached \
+  && apt-get remove --purge -y build-essential git \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /tmp/php-memcached
+
+# Enable apache rewrite module
+RUN a2enmod rewrite
 
 # Use our own apache2.conf that has been altered for reverse proxy log support
 COPY config/apache2.conf /etc/apache2/apache2.conf
