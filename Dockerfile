@@ -45,9 +45,17 @@ RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.ta
   && rm drupal.tar.gz \
   && chown -R www-data:www-data sites
 
+# CKEditor
+ARG CKEDITOR_VERSION=4.5.10
+RUN curl -fSL https://github.com/ckeditor/ckeditor-releases/archive/full/${CKEDITOR_VERSION}.zip \
+      -o /tmp/ckeditor.zip \
+      && unzip /tmp/ckeditor.zip -d sites/all/libraries/ \
+      && mv sites/all/libraries/ckeditor-releases-full-${CKEDITOR_VERSION} sites/all/libraries/ckeditor \
+      && rm -f /tmp/ckeditor.zip
+
 # Install drush
 ARG DRUSH_VERSION=8.1.10
-RUN curl -L --silent https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar > /usr/local/bin/drush \
+RUN curl -fSL https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar > /usr/local/bin/drush \
   && chmod +x /usr/local/bin/drush \
   && drush --version
 
@@ -97,14 +105,6 @@ RUN drush dl log_stdout
 
 # Add Drupal themes
 RUN mkdir sites/all/themes/contrib && drush dl mothership
-
-# Add Drupal libraries
-ARG CKEDITOR_VERSION=4.5.10
-RUN curl -L --silent https://github.com/ckeditor/ckeditor-releases/archive/full/${CKEDITOR_VERSION}.zip \
-      -o /tmp/ckeditor.zip \
-      && unzip /tmp/ckeditor.zip -d sites/all/libraries/ \
-      && mv sites/all/libraries/ckeditor-releases-full-${CKEDITOR_VERSION} sites/all/libraries/ckeditor \
-      && rm -f /tmp/ckeditor.zip
 
 # Finally set the workdir to the Drupal base folder
 WORKDIR /var/www/html
