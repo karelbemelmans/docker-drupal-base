@@ -22,10 +22,10 @@ RUN set -x && apt-get update && apt-get install -y \
 COPY config/apache2.conf /etc/apache2/apache2.conf
 
 # Install Drupal core. This ARG's can be overriden during `docker build`
-ARG DRUPAL_VERSION=7.53
-ARG DRUPAL_MD5=4230279ecca4f0cde652a219e10327e7
+ARG DRUPAL_VERSION=7.54
+ARG DRUPAL_SHA256=d74192aca31b56a95bd2b51f205e45293513466eaf902d056e6317dbcffe715b
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
-  && echo "${DRUPAL_MD5} *drupal.tar.gz" | md5sum -c - \
+  && echo "${DRUPAL_SHA256}  drupal.tar.gz" | sha256sum -c - \
   && tar -xz --strip-components=1 -f drupal.tar.gz \
   && rm drupal.tar.gz \
   && chown -R www-data:www-data sites
