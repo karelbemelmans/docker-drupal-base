@@ -42,8 +42,7 @@ ARG DRUPAL_SHA256=d74192aca31b56a95bd2b51f205e45293513466eaf902d056e6317dbcffe71
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
   && echo "${DRUPAL_SHA256}  drupal.tar.gz" | sha256sum -c - \
   && tar -xz --strip-components=1 -f drupal.tar.gz \
-  && rm drupal.tar.gz \
-  && chown -R www-data:www-data sites
+  && rm drupal.tar.gz
 
 # CKEditor
 ARG CKEDITOR_VERSION=4.5.10
