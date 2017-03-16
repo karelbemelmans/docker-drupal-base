@@ -31,6 +31,7 @@ RUN set -x && DEBIAN_FRONTEND=noninteractive && apt-get update \
   && rm -rf /tmp/php-memcached
 
 # couchbase
+# We need to install igbinary before couchbase, so the splitting up is intended
 RUN set -x && apt-get update && apt-get install -y \
     lsb-release \
     wget \
@@ -40,8 +41,10 @@ RUN set -x && apt-get update && apt-get install -y \
     libcouchbase-dev \
     libcouchbase2-bin \
     build-essential \
-  && pecl install --alldeps couchbase igbinary \
-  && docker-php-ext-enable couchbase igbinary
+  && pecl install --alldeps igbinary \
+  && docker-php-ext-enable igbinary \
+  && pecl install --alldeps couchbase \
+  && docker-php-ext-enable couchbase
 
 # Enable apache rewrite module
 RUN a2enmod rewrite
