@@ -44,7 +44,8 @@ RUN set -x && apt-get update && apt-get install -y \
   && pecl install --alldeps igbinary \
   && docker-php-ext-enable igbinary \
   && pecl install --alldeps couchbase \
-  && docker-php-ext-enable couchbase
+  && docker-php-ext-enable couchbase \
+  && rm -rf /var/lib/apt/lists/*
 
 # Enable apache rewrite module
 RUN a2enmod rewrite
