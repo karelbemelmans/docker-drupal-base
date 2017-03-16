@@ -30,6 +30,19 @@ RUN set -x && DEBIAN_FRONTEND=noninteractive && apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/php-memcached
 
+# couchbase
+RUN set -x && apt-get update && apt-get install -y \
+    lsb-release \
+    wget \
+  && wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-2-amd64.deb \
+  && dpkg -i couchbase-release-1.0-2-amd64.deb \
+  && apt-get update && apt-get install -y \
+    libcouchbase-dev \
+    libcouchbase2-bin \
+    build-essential \
+  && pecl install --alldeps couchbase igbinary \
+  && docker-php-ext-enable couchbase igbinary
+
 # Enable apache rewrite module
 RUN a2enmod rewrite
 
@@ -83,24 +96,45 @@ COPY config/settings.php sites/default/settings.php
 RUN mkdir sites/all/modules/development \
   && drush dl coder devel schema --destination=sites/all/modules/development
 
-# Add Drupal modules, generic contrib
+# Add Drupal contrib modules
 RUN mkdir sites/all/modules/contrib \
-  && drush dl context ctools date ds entity features google_analytics \
-              libraries redis pathauto strongarm token transliteration \
-              variable views views_bulk_operations wysiwyg-7.x-2.x-dev \
-              xmlsitemap content_menu menu_block menu_position cdn smtp \
-              seckit webform memcache-7.x-1.6-rc3
-
-# Multilingual
-RUN drush dl entity_translation i18n i18nviews l10n_update title
-
-# Media
-RUN drush dl media-2.x-dev file_entity-2.x-dev multiform \
-             media_youtube-2.x-dev media_vimeo-2.x-dev \
-             media_browser_plus-3.x-dev
-
-# Custom modules for running Drupal 7 on AWS
-RUN drush dl log_stdout
+  && drush dl \
+    cdn \
+    content_menu \
+    context \
+    couchbasedrupal \
+    ctools \
+    date \
+    ds \
+    entity \
+    entity_translation \
+    features \
+    file_entity-2.x-dev \
+    google_analytics \
+    i18n \
+    i18nviews \
+    l10n_update \
+    libraries \
+    log_stdout \
+    media-2.x-dev \
+    memcache-7.x-1.6-rc3 \
+    menu_block \
+    menu_position \
+    multiform \
+    pathauto \
+    redis \
+    seckit \
+    smtp \
+    strongarm \
+    title \
+    token \
+    transliteration \
+    variable \
+    views \
+    views_bulk_operations \
+    webform \
+    wysiwyg-7.x-2.x-dev \
+    xmlsitemap
 
 # Add Drupal themes
 RUN mkdir sites/all/themes/contrib && drush dl mothership
