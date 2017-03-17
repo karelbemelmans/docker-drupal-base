@@ -32,7 +32,6 @@ if (isset($_ENV['DRUPAL_REDIS_HOST']) && !empty($_ENV['DRUPAL_REDIS_HOST']) &&
 else if (isset($_ENV['DRUPAL_MEMCACHE_HOST']) && !empty($_ENV['DRUPAL_MEMCACHE_HOST']) &&
   isset($_ENV['DRUPAL_MEMCACHE_PORT']) && !empty($_ENV['DRUPAL_MEMCACHE_PORT'])) {
 
-
   $conf['cache_backends'] = array('sites/all/modules/contrib/memcache/memcache.inc');
   $conf['cache_default_class'] = 'MemCacheDrupal';
   $conf['page_cache_without_database'] = TRUE;
@@ -52,6 +51,9 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 
 // Needed when we run Drupal inside Docker
 $conf['drupal_http_request_fails'] = FALSE;
+
+// Never run cron from the website
+$conf['cron_safe_threshold'] = 0;
 
 // Is there an extra.settings.php file to include?
 $settings = DRUPAL_ROOT . '/sites/default/extra.settings.php';
