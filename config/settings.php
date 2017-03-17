@@ -3,12 +3,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Database
 $databases['default']['default'] = array(
-  'driver'   => 'mysql', // since everyone uses MySQL we can hardcode this
-  'database' => $_ENV['DRUPAL_DB_NAME'],
-  'username' => $_ENV['DRUPAL_DB_USER'],
-  'password' => $_ENV['DRUPAL_DB_PASS'],
-  'host'     => $_ENV['DRUPAL_DB_HOST'],
-  'prefix'   => !empty($_ENV['DRUPAL_DB_PREFIX']) ? $_ENV['DRUPAL_DB_PREFIX'] : '',
+  'driver'    => 'mysql', // since everyone uses MySQL we can hardcode this
+  'database'  => $_ENV['DRUPAL_DB_NAME'],
+  'username'  => $_ENV['DRUPAL_DB_USER'],
+  'password'  => $_ENV['DRUPAL_DB_PASS'],
+  'host'      => $_ENV['DRUPAL_DB_HOST'],
+  'prefix'    => !empty($_ENV['DRUPAL_DB_PREFIX']) ? $_ENV['DRUPAL_DB_PREFIX'] : '',
+  'charset'   => 'utf8mb4',
+  'collation' => 'utf8mb4_general_ci',
 );
 
 ////////////////////////////////////////////////////////////////////////////////
