@@ -69,6 +69,12 @@ RUN curl -fSL https://github.com/ckeditor/ckeditor-releases/archive/full/${CKEDI
       && mv sites/all/libraries/ckeditor-releases-full-${CKEDITOR_VERSION} sites/all/libraries/ckeditor \
       && rm -f /tmp/ckeditor.zip
 
+# Colorbox plugin 1.x
+RUN curl -fSL https://github.com/jackmoore/colorbox/archive/1.x.zip -o /tmp/colorbox.zip \
+      && unzip /tmp/colorbox.zip -d sites/all/libraries \
+      && mv sites/all/libraries/colorbox-1.x sites/all/libraries/colorbox \
+      && rm -f /tmp/colorbox.zip
+
 # Install drush
 ARG DRUSH_VERSION=8.1.10
 RUN curl -fSL https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSION}/drush.phar > /usr/local/bin/drush \
@@ -104,6 +110,7 @@ RUN mkdir sites/all/modules/development \
 RUN mkdir sites/all/modules/contrib \
   && drush dl \
     cdn \
+    colorbox \
     content_menu \
     context \
     couchbasedrupal \
