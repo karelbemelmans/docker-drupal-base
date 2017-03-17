@@ -118,6 +118,7 @@ RUN mkdir sites/all/modules/contrib \
     i18n \
     i18nviews \
     l10n_update \
+    ldap \
     libraries \
     log_stdout \
     media-2.x-dev \
