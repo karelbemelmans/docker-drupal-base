@@ -1,51 +1,38 @@
 # from https://www.drupal.org/requirements/php#drupalversions
 FROM php:7.0-apache
 
-# install the PHP extensions we need
-RUN set -x && DEBIAN_FRONTEND=noninteractive && apt-get update \
-  && apt-get install -y --no-install-recommends \
-    libpng12-dev \
+# Install the deb packages and PHP extensions we need
+#
+# Notes:
+# - We need to install the couchbase release package before we can apt-get install the real package
+# - memcached needs manual git checkout
+RUN set -x && DEBIAN_FRONTEND=noninteractive \
+  && apt-get update && apt-get install -y --no-install-recommends lsb-release wget \
+  && wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-2-amd64.deb \
+  && dpkg -i couchbase-release-1.0-2-amd64.deb \
+  && apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    libcouchbase-dev \
+    libcouchbase2-bin \
     libjpeg-dev \
+    libldap2-dev \
+    libmemcached-dev \
+    libmemcached11 \
+    libpng12-dev \
     libpq-dev \
     mysql-client \
     unzip \
   && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
-  && docker-php-ext-install gd mbstring pdo pdo_mysql pdo_pgsql sockets zip \
-  && pecl install redis \
-  && docker-php-ext-enable redis \
-  && rm -rf /var/lib/apt/lists/*
-
-# memcached php7 extension needs some special procedure
-RUN set -x && DEBIAN_FRONTEND=noninteractive && apt-get update \
-  && apt-get install -y --no-install-recommends \
-    git \
-    libmemcached-dev \
-    libmemcached11 \
-    build-essential \
-  && cd /tmp \
-  && git clone --branch php7 https://github.com/php-memcached-dev/php-memcached \
+  && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+  && docker-php-ext-install gd ldap mbstring pdo pdo_mysql pdo_pgsql sockets zip \
+  && pecl install igbinary redis couchbase \
+  && cd /tmp && git clone --branch php7 https://github.com/php-memcached-dev/php-memcached \
   && cd php-memcached && phpize && ./configure && make && make install \
-  && docker-php-ext-enable memcached \
+  && docker-php-ext-enable igbinary redis couchbase memcached \
   && apt-get remove --purge -y build-essential git \
   && rm -rf /var/lib/apt/lists/* \
   && rm -rf /tmp/php-memcached
-
-# couchbase
-# We need to install igbinary before couchbase, so the splitting up is intended
-RUN set -x && apt-get update && apt-get install -y \
-    lsb-release \
-    wget \
-  && wget http://packages.couchbase.com/releases/couchbase-release/couchbase-release-1.0-2-amd64.deb \
-  && dpkg -i couchbase-release-1.0-2-amd64.deb \
-  && apt-get update && apt-get install -y \
-    libcouchbase-dev \
-    libcouchbase2-bin \
-    build-essential \
-  && pecl install --alldeps igbinary \
-  && docker-php-ext-enable igbinary \
-  && pecl install --alldeps couchbase \
-  && docker-php-ext-enable couchbase \
-  && rm -rf /var/lib/apt/lists/*
 
 # Enable apache rewrite module
 RUN a2enmod rewrite
