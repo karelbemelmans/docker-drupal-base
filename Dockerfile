@@ -85,9 +85,7 @@ RUN curl -fSL https://github.com/drush-ops/drush/releases/download/${DRUSH_VERSI
 RUN mkdir -p sites/default/files && chown www-data:www-data sites/default/files
 
 # Change some PHP defaults.
-RUN { \
-    echo 'date.timezone = Europe/Stockholm'; \
-  } > /usr/local/etc/php/conf.d/drupal-base.ini
+COPY config/php.ini /usr/local/etc/php/conf.d/drupal.ini
 
 # Remove some files from the Drupal base install.
 RUN rm -f CHANGELOG.txt COPYRIGHT.txt INSTALL.mysql.txt INSTALL.pgsql.txt \
