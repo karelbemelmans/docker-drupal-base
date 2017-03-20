@@ -104,6 +104,7 @@ RUN mkdir sites/all/modules/contrib \
     ds \
     entity \
     entity_translation \
+    facetapi \
     features \
     file_entity-2.x-dev \
     google_analytics \
@@ -120,6 +121,9 @@ RUN mkdir sites/all/modules/contrib \
     multiform \
     pathauto \
     redis \
+    search_api \
+    search_api_db \
+    search_api_solr \
     seckit \
     smtp \
     strongarm \
