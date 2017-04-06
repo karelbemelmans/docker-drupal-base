@@ -142,3 +142,6 @@ RUN mkdir sites/all/themes/contrib && drush dl mothership
 
 # Finally set the workdir to the Drupal base folder
 WORKDIR /var/www/html
+
+# We run in non-UTC so we need to set our timezone
+ENV TZ=Europe/Stockholm
