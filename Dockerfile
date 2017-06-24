@@ -142,3 +142,6 @@ RUN mkdir sites/all/themes/contrib && drush dl mothership
 
 # Finally set the workdir to the Drupal base folder
 WORKDIR /var/www/html
+
+COPY entrypoint.sh /
+CMD ["/entrypoint.sh"]

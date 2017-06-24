@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  drupal:
+    build: .
+    container_name: drupal
+    ports:
+      - "8080:80"
+    environment:
+      DRUPAL_DB_NAME: drupal
+      DRUPAL_DB_USER_FILE: /run/secrets/db_user
+      DRUPAL_DB_PASS_FILE: /run/secrets/db_password
+      DRUPAL_DB_HOST: db
+    secrets:
+      - db_user
+      - db_password
+    volumes:
+      - ./data/drupal-files:/public/sites/default/files
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: drupal
+      MYSQL_USER_FILE: /run/secrets/db_user
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_user
+      - db_password
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  memcached:
+    image: memcached
+
+secrets:
+  db_user:
+    file: ./devsecrets/db_user
+  db_password:
+    file: ./devsecrets/db_password
