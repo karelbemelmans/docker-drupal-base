@@ -41,10 +41,10 @@ RUN a2enmod rewrite
 COPY config/apache2.conf /etc/apache2/apache2.conf
 
 # Install Drupal core. This ARG's can be overriden during `docker build`
-ARG DRUPAL_VERSION=7.54
-ARG DRUPAL_SHA256=d74192aca31b56a95bd2b51f205e45293513466eaf902d056e6317dbcffe715b
+ARG DRUPAL_VERSION=7.56
+ARG DRUPAL_MD5=5d198f40f0f1cbf9cdf1bf3de842e534
 RUN curl -fSL "https://ftp.drupal.org/files/projects/drupal-${DRUPAL_VERSION}.tar.gz" -o drupal.tar.gz \
-  && echo "${DRUPAL_SHA256}  drupal.tar.gz" | sha256sum -c - \
+  && echo "${DRUPAL_MD5}  drupal.tar.gz" | md5sum -c - \
   && tar -xz --strip-components=1 -f drupal.tar.gz \
   && rm drupal.tar.gz
 
@@ -142,6 +142,3 @@ RUN mkdir sites/all/themes/contrib && drush dl mothership
 
 # Finally set the workdir to the Drupal base folder
 WORKDIR /var/www/html
-
-# We run in non-UTC so we need to set our timezone
-ENV TZ=Europe/Stockholm
